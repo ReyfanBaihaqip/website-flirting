@@ -1,47 +1,34 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>For You ✨</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <audio id="bgMusic" src="instrumental.mp3" loop preload="auto"></audio>
+  <audio id="bgMusic" src="instrumental.mp3" loop></audio>
 
-  <div id="ui">
-    <h1 class="title">for you</h1>
-    <div class="controls">
-      <button id="startBtn" class="btn">Start Surprise</button>
-      <div id="scoreWrap" class="info hidden">
-        <span>Score: <span id="score">0</span></span>
-        <span>Time: <span id="time">30</span>s</span>
-      </div>
-    </div>
-    <p class="hint">click falling stars to collect them ✨</p>
+  <div class="container">
+    <h1>FOR YOU</h1>
+    <button id="startBtn">Start Surprise</button>
+    <p id="score">Score: 0 | Time: 30s</p>
+    <p class="hint">Click falling stars to collect them ✨</p>
   </div>
 
-  <!-- canvas utama -->
-  <canvas id="scene"></canvas>
-  <div id="thankYou">
-    <h1>Thank you for being here 💖</h1>
-  </div>
-  
-  <!-- modal hasil -->
-  <div id="resultModal" class="modal hidden">
-    <div class="modal-card">
-      <h2 id="finalMsg">Thank you for showing up.</h2>
-      <p class="big">Your score: <strong id="finalScore">0</strong></p>
-      <p class="small">Even the stars envy how bright you make my world.</p>
-      <div class="modal-actions">
-        <button id="replayBtn" class="btn">Play Again</button>
-        <a id="closeLink" class="btn ghost" href="#">Close</a>
+  <div id="thankYou" class="thank-you">
+    <div class="popup">
+      <h2>Thank you for showing up.</h2>
+      <p class="your-score">Your score: <span id="finalScore">0</span></p>
+      <p>Even the stars envy how bright you make my world.</p>
+      <div class="buttons">
+        <button id="playAgain">Play Again</button>
+        <button id="closeBtn">Close</button>
       </div>
     </div>
   </div>
 
+  <canvas id="sky"></canvas>
   <script src="script.js"></script>
 </body>
 </html>
-
-
