@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -5,83 +7,11 @@
 }
 
 body {
+  font-family: "Poppins", sans-serif;
+  color: #fff;
   overflow: hidden;
+  background: linear-gradient(to bottom, #050016, #16002c);
   height: 100vh;
-  background: radial-gradient(ellipse at bottom, #0b0b0f 0%, #000 100%);
-  color: #fff;
-  font-family: 'Poppins', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  transition: background 3s ease;
-}
-
-h1 {
-  font-size: 2.5em;
-  color: #ff77b7;
-  text-shadow: 0 0 10px #ff77b7;
-}
-
-button {
-  background: #ff77b7;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 25px;
-  font-size: 1em;
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 0 0 10px #ff77b7;
-  transition: transform 0.2s;
-}
-
-button:hover {
-  transform: scale(1.1);
-}
-
-.hint {
-  color: #ffb4e6;
-  margin-top: 10px;
-}
-
-#thankYou {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.75);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-}
-
-.popup {
-  background: rgba(30, 30, 30, 0.9);
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 0 20px #ff77b7;
-  text-align: center;
-  color: #fff;
-}
-
-.popup h2 {
-  color: #ff77b7;
-}
-
-.popup button {
-  margin: 10px;
-}
-
-/* --- Efek fade langit akhir --- */
-@keyframes skyFade {
-  from { background: radial-gradient(ellipse at bottom, #0b0b0f 0%, #000 100%); }
-  to { background: radial-gradient(ellipse at bottom, #1a0b2e 0%, #4b2d60 100%); }
-}
-
-body.fadeSky {
-  animation: skyFade 3s forwards;
 }
 
 canvas {
@@ -90,5 +20,75 @@ canvas {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
+}
+
+#ui {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.title {
+  font-size: 2.2em;
+  font-weight: 600;
+  color: #f6caff;
+  letter-spacing: 2px;
+}
+
+.btn {
+  padding: 10px 25px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1em;
+  background: #ff87d3;
+  color: #fff;
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  background: #ff5ec6;
+  box-shadow: 0 0 10px #ffb3e5;
+}
+
+.info {
+  margin-top: 10px;
+  font-size: 1.1em;
+}
+
+.hidden {
+  display: none;
+}
+
+.hint {
+  margin-top: 10px;
+  color: #bba9d1;
+  font-size: 0.9em;
+}
+
+#thankYou {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 2em;
+  color: #ffd2f6;
+  display: none;
+}
+
+/* ✨ Efek langit berubah warna saat akhir */
+body.fade-end {
+  animation: skyFade 6s ease-in-out forwards;
+}
+
+@keyframes skyFade {
+  from {
+    background: linear-gradient(to bottom, #050016, #16002c);
+  }
+  to {
+    background: linear-gradient(to bottom, #3b0066, #a85acb);
+  }
 }
