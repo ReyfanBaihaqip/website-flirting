@@ -148,3 +148,17 @@ body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* 🌌 Efek langit berubah warna saat akhir */
+body.fade-end {
+  animation: skyFade 6s ease-in-out forwards;
+}
+
+@keyframes skyFade {
+  from {
+    background: linear-gradient(to bottom, #000010, #180033);
+  }
+  to {
+    background: linear-gradient(to bottom, #3b0066, #a85acb);
+  }
+}
