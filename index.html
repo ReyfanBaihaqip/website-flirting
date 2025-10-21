@@ -7,28 +7,26 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <audio id="bgMusic" src="instrumental.mp3" loop></audio>
+  <audio id="bgMusic" src="instrumental.mp3" loop preload="auto"></audio>
 
-  <div class="container">
-    <h1>FOR YOU</h1>
-    <button id="startBtn">Start Surprise</button>
-    <p id="score">Score: 0 | Time: 30s</p>
+  <div id="ui">
+    <h1 class="title">FOR YOU</h1>
+    <div class="controls">
+      <button id="startBtn" class="btn">Start Surprise</button>
+      <div id="scoreWrap" class="info hidden">
+        <span>Score: <span id="score">0</span></span>
+        <span>| Time: <span id="time">30</span>s</span>
+      </div>
+    </div>
     <p class="hint">Click falling stars to collect them ✨</p>
   </div>
 
-  <div id="thankYou" class="thank-you">
-    <div class="popup">
-      <h2>Thank you for showing up.</h2>
-      <p class="your-score">Your score: <span id="finalScore">0</span></p>
-      <p>Even the stars envy how bright you make my world.</p>
-      <div class="buttons">
-        <button id="playAgain">Play Again</button>
-        <button id="closeBtn">Close</button>
-      </div>
-    </div>
+  <canvas id="scene"></canvas>
+
+  <div id="thankYou" class="hidden">
+    <h1>Thank you for being here 💖</h1>
   </div>
 
-  <canvas id="sky"></canvas>
   <script src="script.js"></script>
 </body>
 </html>
