@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For You ✨</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <audio id="bgMusic" src="instrumental.mp3" loop preload="auto"></audio>
+
+  <div id="ui">
+    <h1 class="title">for you</h1>
+    <div class="controls">
+      <button id="startBtn" class="btn">Start Surprise</button>
+      <div id="scoreWrap" class="info hidden">
+        <span>Score: <span id="score">0</span></span>
+        <span>Time: <span id="time">30</span>s</span>
+      </div>
+    </div>
+    <p class="hint">click falling stars to collect them ✨</p>
+  </div>
+
+  <!-- canvas utama -->
+  <canvas id="scene"></canvas>
+
+  <!-- modal hasil -->
+  <div id="resultModal" class="modal hidden">
+    <div class="modal-card">
+      <h2 id="finalMsg">Thank you for showing up.</h2>
+      <p class="big">Your score: <strong id="finalScore">0</strong></p>
+      <p class="small">Even the stars envy how bright you make my world.</p>
+      <div class="modal-actions">
+        <button id="replayBtn" class="btn">Play Again</button>
+        <a id="closeLink" class="btn ghost" href="#">Close</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
