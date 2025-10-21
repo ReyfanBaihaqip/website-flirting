@@ -1,50 +1,150 @@
-:root{
-  --bg1:#020111; --bg2:#0b0b2b; --accent:#ff79b0;
-  --glass: rgba(255,255,255,0.06);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial}
-body{
-  background: linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 100%);
-  color:#fff; overflow:hidden;
-}
-#scene{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+/* ====== style.css ====== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-#ui{position:relative;z-index:3;text-align:center;padding-top:5vh;pointer-events:none}
-.title{font-size:3rem;letter-spacing:.3rem;text-transform:lowercase;margin-bottom:.4rem}
-.controls{display:flex;gap:12px;align-items:center;justify-content:center;margin-bottom:.4rem;pointer-events:auto}
-.btn{
-  background:linear-gradient(90deg,var(--accent),#ff5fa8);
-  color:#fff;border:0;padding:.6rem 1rem;border-radius:999px;cursor:pointer;font-weight:600;
-  box-shadow:0 6px 24px rgba(0,0,0,0.5);transition:transform .18s;
+:root {
+  --bg-top: #000010;
+  --bg-bottom: #180033;
+  --accent: #ff99cc;
+  --white: #fff;
 }
-.btn:hover{transform:translateY(-4px)}
-.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.08);padding:.5rem .9rem}
-.info{display:flex;gap:16px;align-items:center;background:var(--glass);padding:.45rem .7rem;border-radius:12px;font-weight:600}
-.hidden{display:none}
 
-.hint{opacity:.75;font-size:.95rem;margin-top:.6rem;pointer-events:none}
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  color: var(--white);
+  background: linear-gradient(to bottom, var(--bg-top), var(--bg-bottom));
+}
+
+#scene {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* UI di depan */
+#ui {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.title {
+  font-size: 2.5em;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-shadow: 0 0 12px var(--accent);
+}
+
+.controls {
+  margin: 20px 0;
+}
+
+.btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 1.1em;
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--accent);
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: scale(1.1);
+  background: #ff77bb;
+}
+
+.btn.ghost {
+  background: transparent;
+  border: 2px solid var(--accent);
+}
+
+.hidden {
+  display: none;
+}
+
+.info {
+  margin-top: 10px;
+  font-size: 1.2em;
+}
+
+.hint {
+  font-size: 0.9em;
+  opacity: 0.7;
+}
 
 /* modal */
-.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);z-index:6}
-.modal-card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));padding:1.7rem;border-radius:14px;max-width:520px;width:90%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
-.big{font-size:1.6rem;margin:0.45rem 0}
-.small{opacity:.85;margin-bottom:1rem}
-.modal-actions{display:flex;gap:10px;justify-content:center}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.7);
+  z-index: 10;
+}
 
+.modal-card {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 30px 50px;
+  text-align: center;
+  color: var(--white);
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+  backdrop-filter: blur(6px);
+}
+
+.modal-card h2 {
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.modal-card .big {
+  font-size: 1.4em;
+  margin: 10px 0;
+}
+
+.modal-card .small {
+  opacity: 0.8;
+  font-size: 0.9em;
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* pesan terima kasih */
 #thankYou {
-  display: none;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: white;
-  font-size: 2rem;
-  text-align: center;
-  animation: fadeIn 2s ease-in-out;
+  color: var(--accent);
+  font-size: 2.5em;
+  text-shadow: 0 0 20px var(--accent);
+  animation: fadeIn 2s ease-in-out forwards;
+  z-index: 8;
+  display: none;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -60%); }
-  to { opacity: 1; transform: translate(-50%, -50%); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
