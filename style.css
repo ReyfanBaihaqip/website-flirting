@@ -1,164 +1,94 @@
-/* ====== style.css ====== */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-:root {
-  --bg-top: #000010;
-  --bg-bottom: #180033;
-  --accent: #ff99cc;
-  --white: #fff;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  padding: 0;
   overflow: hidden;
   height: 100vh;
+  background: radial-gradient(ellipse at bottom, #0b0b0f 0%, #000 100%);
+  color: #fff;
   font-family: 'Poppins', sans-serif;
-  color: var(--white);
-  background: linear-gradient(to bottom, var(--bg-top), var(--bg-bottom));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: background 3s ease;
 }
 
-#scene {
+h1 {
+  font-size: 2.5em;
+  color: #ff77b7;
+  text-shadow: 0 0 10px #ff77b7;
+}
+
+button {
+  background: #ff77b7;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-size: 1em;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 10px #ff77b7;
+  transition: transform 0.2s;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+.hint {
+  color: #ffb4e6;
+  margin-top: 10px;
+}
+
+#thankYou {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
-}
-
-/* UI di depan */
-#ui {
-  position: relative;
-  z-index: 5;
-  text-align: center;
-  margin-top: 50px;
-}
-
-.title {
-  font-size: 2.5em;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--accent);
-  text-shadow: 0 0 12px var(--accent);
-}
-
-.controls {
-  margin: 20px 0;
-}
-
-.btn {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 25px;
-  padding: 10px 20px;
-  font-size: 1.1em;
-  cursor: pointer;
-  box-shadow: 0 0 10px var(--accent);
-  transition: all 0.3s ease;
-}
-
-.btn:hover {
-  transform: scale(1.1);
-  background: #ff77bb;
-}
-
-.btn.ghost {
-  background: transparent;
-  border: 2px solid var(--accent);
-}
-
-.hidden {
+  background: rgba(0,0,0,0.75);
   display: none;
-}
-
-.info {
-  margin-top: 10px;
-  font-size: 1.2em;
-}
-
-.hint {
-  font-size: 0.9em;
-  opacity: 0.7;
-}
-
-/* modal */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.7);
+  align-items: center;
   z-index: 10;
 }
 
-.modal-card {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+.popup {
+  background: rgba(30, 30, 30, 0.9);
+  padding: 30px;
   border-radius: 20px;
-  padding: 30px 50px;
+  box-shadow: 0 0 20px #ff77b7;
   text-align: center;
-  color: var(--white);
-  box-shadow: 0 0 20px rgba(255,255,255,0.3);
-  backdrop-filter: blur(6px);
+  color: #fff;
 }
 
-.modal-card h2 {
-  color: var(--accent);
-  margin-bottom: 10px;
+.popup h2 {
+  color: #ff77b7;
 }
 
-.modal-card .big {
-  font-size: 1.4em;
-  margin: 10px 0;
+.popup button {
+  margin: 10px;
 }
 
-.modal-card .small {
-  opacity: 0.8;
-  font-size: 0.9em;
-}
-
-.modal-actions {
-  margin-top: 20px;
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-}
-
-/* pesan terima kasih */
-#thankYou {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: var(--accent);
-  font-size: 2.5em;
-  text-shadow: 0 0 20px var(--accent);
-  animation: fadeIn 2s ease-in-out forwards;
-  z-index: 8;
-  display: none;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-/* 🌌 Efek langit berubah warna saat akhir */
-body.fade-end {
-  animation: skyFade 6s ease-in-out forwards;
-}
-
+/* --- Efek fade langit akhir --- */
 @keyframes skyFade {
-  from {
-    background: linear-gradient(to bottom, #000010, #180033);
-  }
-  to {
-    background: linear-gradient(to bottom, #3b0066, #a85acb);
-  }
+  from { background: radial-gradient(ellipse at bottom, #0b0b0f 0%, #000 100%); }
+  to { background: radial-gradient(ellipse at bottom, #1a0b2e 0%, #4b2d60 100%); }
 }
 
+body.fadeSky {
+  animation: skyFade 3s forwards;
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
