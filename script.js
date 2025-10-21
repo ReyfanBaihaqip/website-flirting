@@ -1,24 +1,28 @@
-const canvas = document.getElementById("sky");
+console.log("✅ Script loaded successfully");
+
+const canvas = document.getElementById("scene");
 const ctx = canvas.getContext("2d");
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-const bgMusic = document.getElementById("bgMusic");
-const startBtn = document.getElementById("startBtn");
-const thankYou = document.getElementById("thankYou");
-const playAgain = document.getElementById("playAgain");
-const closeBtn = document.getElementById("closeBtn");
-const scoreText = document.getElementById("score");
-const finalScore = document.getElementById("finalScore");
-
-let stars = [];
-let hearts = [];
+const stars = [];
 let score = 0;
-let time = 30;
-let gameInterval;
-let timeInterval;
+let timeLeft = 30;
+let playing = false;
+let timerInterval;
 
-// bintang jatuh
+const startBtn = document.getElementById("startBtn");
+const scoreDisplay = document.getElementById("score");
+const timeDisplay = document.getElementById("time");
+const scoreWrap = document.getElementById("scoreWrap");
+const thankYou = document.getElementById("thankYou");
+const bgMusic = document.getElementById("bgMusic");
+
+window.onload = () => {
+  thankYou.style.display = "none";
+};
+
+// buat bintang
 class Star {
   constructor() {
     this.reset();
@@ -26,119 +30,113 @@ class Star {
   reset() {
     this.x = Math.random() * canvas.width;
     this.y = -10;
-    this.size = Math.random() * 3 + 1;
-    this.speed = Math.random() * 2 + 2;
-    this.opacity = Math.random();
+    this.size = Math.random() * 3 + 2;
+    this.speed = Math.random() * 2 + 1;
+    this.angle = Math.random() * Math.PI / 4;
+  }
+  update() {
+    this.x += this.speed * Math.sin(this.angle);
+    this.y += this.speed * Math.cos(this.angle);
+    if (this.y > canvas.height + 10) this.reset();
   }
   draw() {
     ctx.beginPath();
+    ctx.fillStyle = "white";
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-    ctx.shadowColor = "#fff";
-    ctx.shadowBlur = 8;
     ctx.fill();
-  }
-  update() {
-    this.x += 1.5;
-    this.y += this.speed;
-    if (this.y > canvas.height) this.reset();
   }
 }
 
-// partikel cinta
+// efek partikel cinta
 class Heart {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = -10;
-    this.size = Math.random() * 8 + 4;
-    this.speed = Math.random() * 1 + 0.5;
-    this.opacity = Math.random() * 0.5 + 0.3;
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.alpha = 1;
+    this.size = 5;
+  }
+  update() {
+    this.y += 1;
+    this.alpha -= 0.02;
   }
   draw() {
+    ctx.fillStyle = `rgba(255,192,203,${this.alpha})`;
     ctx.beginPath();
-    ctx.fillStyle = `rgba(255, 150, 200, ${this.opacity})`;
     ctx.moveTo(this.x, this.y);
-    ctx.bezierCurveTo(this.x - this.size, this.y - this.size,
-                      this.x - this.size * 1.5, this.y + this.size / 2,
-                      this.x, this.y + this.size);
-    ctx.bezierCurveTo(this.x + this.size * 1.5, this.y + this.size / 2,
-                      this.x + this.size, this.y - this.size,
-                      this.x, this.y);
+    ctx.arc(this.x - 2, this.y - 2, this.size / 2, 0, Math.PI, true);
+    ctx.arc(this.x + 2, this.y - 2, this.size / 2, 0, Math.PI, true);
+    ctx.lineTo(this.x, this.y + this.size);
     ctx.fill();
   }
-  update() {
-    this.y += this.speed;
-    if (this.y > canvas.height) this.y = -10;
-  }
 }
 
-function createStars(num) {
-  for (let i = 0; i < num; i++) stars.push(new Star());
-}
-function createHearts(num) {
-  for (let i = 0; i < num; i++) hearts.push(new Heart());
-}
+const hearts = [];
 
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  stars.forEach((s) => { s.update(); s.draw(); });
-  hearts.forEach((h) => { h.update(); h.draw(); });
-  requestAnimationFrame(animate);
-}
-
-createStars(80);
-createHearts(20);
-animate();
-
-// interaksi klik bintang
+// klik bintang
 canvas.addEventListener("click", (e) => {
-  stars.forEach((s) => {
-    const dx = e.clientX - s.x;
-    const dy = e.clientY - s.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    if (distance < 10) {
+  if (!playing) return;
+  const { x, y } = e;
+  stars.forEach((star) => {
+    if (Math.hypot(star.x - x, star.y - y) < 10) {
       score++;
-      s.reset();
-      scoreText.textContent = `Score: ${score} | Time: ${time}s`;
+      scoreDisplay.textContent = score;
+      hearts.push(new Heart(star.x, star.y));
+      star.reset();
     }
   });
 });
 
+// animasi utama
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach((s) => {
+    s.update();
+    s.draw();
+  });
+  hearts.forEach((h, i) => {
+    h.update();
+    h.draw();
+    if (h.alpha <= 0) hearts.splice(i, 1);
+  });
+  if (playing) requestAnimationFrame(animate);
+}
+
+// mulai game
+startBtn.addEventListener("click", () => {
+  startGame();
+});
+
 function startGame() {
+  playing = true;
   score = 0;
-  time = 30;
+  timeLeft = 30;
+  scoreDisplay.textContent = score;
+  timeDisplay.textContent = timeLeft;
+  scoreWrap.classList.remove("hidden");
   thankYou.style.display = "none";
-  scoreText.textContent = `Score: ${score} | Time: ${time}s`;
+  document.body.classList.remove("fade-end");
   bgMusic.play();
 
-  clearInterval(gameInterval);
-  clearInterval(timeInterval);
+  stars.length = 0;
+  for (let i = 0; i < 100; i++) {
+    stars.push(new Star());
+  }
 
-  timeInterval = setInterval(() => {
-    time--;
-    scoreText.textContent = `Score: ${score} | Time: ${time}s`;
-    if (time <= 0) endGame();
+  animate();
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timeDisplay.textContent = timeLeft;
+    if (timeLeft <= 0) endGame();
   }, 1000);
 }
 
+// akhir game
 function endGame() {
-  clearInterval(timeInterval);
+  playing = false;
+  clearInterval(timerInterval);
   bgMusic.pause();
-  bgMusic.currentTime = 0;
-  finalScore.textContent = score;
-  document.body.classList.add("fadeSky");
-  thankYou.style.display = "flex";
+  thankYou.style.display = "block";
+  document.body.classList.add("fade-end");
 }
-
-startBtn.addEventListener("click", startGame);
-playAgain.addEventListener("click", () => {
-  document.body.classList.remove("fadeSky");
-  startGame();
-});
-closeBtn.addEventListener("click", () => {
-  thankYou.style.display = "none";
-});
-
-window.onload = () => {
-  thankYou.style.display = "none";
-};
