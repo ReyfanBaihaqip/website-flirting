@@ -120,6 +120,13 @@ function endGame() {
   bgMusic.pause();
   finalScore.textContent = score;
   resultModal.classList.remove("hidden");
+
+  // 🌌 Tambahan: ubah langit jadi ungu lembut
+  document.body.classList.add("fade-end");
+
+  // 🌟 Tambahan opsional: tampilkan pesan thank you
+  const thankYou = document.getElementById("thankYou");
+  thankYou.style.display = "block";
 }
 
 // Ulangi game
@@ -134,3 +141,4 @@ replayBtn.addEventListener("click", replayGame);
 closeLink.addEventListener("click", () => {
   resultModal.classList.add("hidden");
 });
+
