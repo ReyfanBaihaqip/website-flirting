@@ -1,30 +1,24 @@
-// Ambil elemen
-const canvas = document.getElementById("scene");
+const canvas = document.getElementById("sky");
 const ctx = canvas.getContext("2d");
-const startBtn = document.getElementById("startBtn");
-const replayBtn = document.getElementById("replayBtn");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
 const bgMusic = document.getElementById("bgMusic");
-const scoreEl = document.getElementById("score");
-const timeEl = document.getElementById("time");
-const resultModal = document.getElementById("resultModal");
+const startBtn = document.getElementById("startBtn");
+const thankYou = document.getElementById("thankYou");
+const playAgain = document.getElementById("playAgain");
+const closeBtn = document.getElementById("closeBtn");
+const scoreText = document.getElementById("score");
 const finalScore = document.getElementById("finalScore");
-const closeLink = document.getElementById("closeLink");
 
 let stars = [];
+let hearts = [];
 let score = 0;
-let timeLeft = 30;
-let gameInterval, timerInterval;
-let playing = false;
+let time = 30;
+let gameInterval;
+let timeInterval;
 
-// Atur ukuran canvas
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
-
-// Bintang
+// bintang jatuh
 class Star {
   constructor() {
     this.reset();
@@ -32,113 +26,119 @@ class Star {
   reset() {
     this.x = Math.random() * canvas.width;
     this.y = -10;
-    this.size = Math.random() * 2 + 1;
-    this.speedX = Math.random() * 1 + 0.3;
-    this.speedY = Math.random() * 3 + 1.5;
-  }
-  update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-    if (this.y > canvas.height || this.x > canvas.width) {
-      this.reset();
-      this.y = -10;
-    }
+    this.size = Math.random() * 3 + 1;
+    this.speed = Math.random() * 2 + 2;
+    this.opacity = Math.random();
   }
   draw() {
     ctx.beginPath();
-    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 2);
-    grad.addColorStop(0, "rgba(255,255,255,1)");
-    grad.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.fillStyle = grad;
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+    ctx.shadowColor = "#fff";
+    ctx.shadowBlur = 8;
     ctx.fill();
+  }
+  update() {
+    this.x += 1.5;
+    this.y += this.speed;
+    if (this.y > canvas.height) this.reset();
   }
 }
 
-// Buat bintang awal
-for (let i = 0; i < 80; i++) stars.push(new Star());
-
-// Animasi langit
-function animate() {
-  if (!playing) return;
-  ctx.fillStyle = "rgba(0,0,20,0.3)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  for (let star of stars) {
-    star.update();
-    star.draw();
+// partikel cinta
+class Heart {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = -10;
+    this.size = Math.random() * 8 + 4;
+    this.speed = Math.random() * 1 + 0.5;
+    this.opacity = Math.random() * 0.5 + 0.3;
   }
+  draw() {
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(255, 150, 200, ${this.opacity})`;
+    ctx.moveTo(this.x, this.y);
+    ctx.bezierCurveTo(this.x - this.size, this.y - this.size,
+                      this.x - this.size * 1.5, this.y + this.size / 2,
+                      this.x, this.y + this.size);
+    ctx.bezierCurveTo(this.x + this.size * 1.5, this.y + this.size / 2,
+                      this.x + this.size, this.y - this.size,
+                      this.x, this.y);
+    ctx.fill();
+  }
+  update() {
+    this.y += this.speed;
+    if (this.y > canvas.height) this.y = -10;
+  }
+}
 
+function createStars(num) {
+  for (let i = 0; i < num; i++) stars.push(new Star());
+}
+function createHearts(num) {
+  for (let i = 0; i < num; i++) hearts.push(new Heart());
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach((s) => { s.update(); s.draw(); });
+  hearts.forEach((h) => { h.update(); h.draw(); });
   requestAnimationFrame(animate);
 }
 
-// Klik bintang
-canvas.addEventListener("click", (e) => {
-  if (!playing) return;
-  const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
+createStars(80);
+createHearts(20);
+animate();
 
-  for (let i = 0; i < stars.length; i++) {
-    const s = stars[i];
-    const dx = s.x - mouseX;
-    const dy = s.y - mouseY;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < 10) {
+// interaksi klik bintang
+canvas.addEventListener("click", (e) => {
+  stars.forEach((s) => {
+    const dx = e.clientX - s.x;
+    const dy = e.clientY - s.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < 10) {
       score++;
-      scoreEl.textContent = score;
-      stars.splice(i, 1);
-      stars.push(new Star());
-      break;
+      s.reset();
+      scoreText.textContent = `Score: ${score} | Time: ${time}s`;
     }
-  }
+  });
 });
 
-// Mulai game
 function startGame() {
   score = 0;
-  timeLeft = 30;
-  scoreEl.textContent = 0;
-  timeEl.textContent = timeLeft;
-  document.getElementById("scoreWrap").classList.remove("hidden");
-  resultModal.classList.add("hidden");
-  playing = true;
+  time = 30;
+  thankYou.style.display = "none";
+  scoreText.textContent = `Score: ${score} | Time: ${time}s`;
   bgMusic.play();
-  animate();
 
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    timeEl.textContent = timeLeft;
-    if (timeLeft <= 0) endGame();
+  clearInterval(gameInterval);
+  clearInterval(timeInterval);
+
+  timeInterval = setInterval(() => {
+    time--;
+    scoreText.textContent = `Score: ${score} | Time: ${time}s`;
+    if (time <= 0) endGame();
   }, 1000);
 }
 
-// Akhiri game
 function endGame() {
-  playing = false;
-  clearInterval(timerInterval);
+  clearInterval(timeInterval);
   bgMusic.pause();
+  bgMusic.currentTime = 0;
   finalScore.textContent = score;
-  resultModal.classList.remove("hidden");
-
-  // 🌌 Tambahan: ubah langit jadi ungu lembut
-  document.body.classList.add("fade-end");
-
-  // 🌟 Tambahan opsional: tampilkan pesan thank you
-  const thankYou = document.getElementById("thankYou");
-  thankYou.style.display = "block";
+  document.body.classList.add("fadeSky");
+  thankYou.style.display = "flex";
 }
 
-// Ulangi game
-function replayGame() {
-  resultModal.classList.add("hidden");
-  startGame();
-}
-
-// Event listener
 startBtn.addEventListener("click", startGame);
-replayBtn.addEventListener("click", replayGame);
-closeLink.addEventListener("click", () => {
-  resultModal.classList.add("hidden");
+playAgain.addEventListener("click", () => {
+  document.body.classList.remove("fadeSky");
+  startGame();
+});
+closeBtn.addEventListener("click", () => {
+  thankYou.style.display = "none";
 });
 
+window.onload = () => {
+  thankYou.style.display = "none";
+};
