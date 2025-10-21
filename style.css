@@ -31,3 +31,20 @@ body{
 .big{font-size:1.6rem;margin:0.45rem 0}
 .small{opacity:.85;margin-bottom:1rem}
 .modal-actions{display:flex;gap:10px;justify-content:center}
+
+#thankYou {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 2rem;
+  text-align: center;
+  animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -60%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
