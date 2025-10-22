@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>For You ✨</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="sky">
+    <canvas id="stars"></canvas>
+    <div class="content">
+      <h1 class="title">for you</h1>
+      <p class="subtitle">a little night for someone special</p>
+      <button id="surpriseBtn" class="btn">open surprise</button>
+    </div>
+  </div>
+
+  <!-- Hidden modal -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <button id="closeBtn" class="close">✕</button>
+      <h2>Thank you for showing up.</h2>
+      <p class="message">Even the stars envy how bright you make my world.</p>
+    </div>
+  </div>
+
+  <!-- Background music -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="instrumental.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
