@@ -1,0 +1,185 @@
+/* ===== Reset & global ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    /* Font dari CSS yang Anda berikan */
+    font-family: 'Helvetica Neue', Arial, sans-serif; 
+}
+
+html, body, #stars {
+    height: 100%;
+}
+
+body {
+    /* Latar belakang gradien baru */
+    background: linear-gradient(180deg, #020111 0%, #191621 100%);
+    color: #fff;
+    overflow: hidden;
+}
+
+/* ===== Sky & canvas (Diperbarui untuk Parallax) ===== */
+.sky {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Transformasi ini akan diubah oleh JavaScript untuk efek parallax */
+    transform: translate(0,0) scale(1.05);
+    transition: transform 0.1s ease-out;
+}
+
+canvas#stars {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ===== Content ===== */
+.content {
+    position: relative;
+    text-align: center;
+    padding: 2rem;
+    z-index: 10;
+}
+
+.title {
+    font-size: 4rem;
+    letter-spacing: 0.25rem;
+    text-transform: lowercase;
+    margin-bottom: 0.2rem;
+    font-weight: 700;
+    /* Animasi mengambang */
+    animation: floatAnimation 6s ease-in-out infinite; 
+}
+
+.subtitle {
+    opacity: 0.8;
+    margin-bottom: 1.25rem;
+    /* Animasi mengambang */
+    animation: floatAnimation 6s ease-in-out infinite; 
+}
+
+.btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 0.85rem 1.25rem;
+    border-radius: 999px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    /* Efek glassmorphism dengan vendor prefix untuk kompatibilitas */
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    transition: all 0.25s;
+    /* Animasi mengambang */
+    animation: floatAnimation 6s ease-in-out infinite; 
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.btn:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease-in-out;
+}
+
+/* ===== Modal ===== */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    /* Efek glassmorphism dengan vendor prefix untuk kompatibilitas */
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    z-index: 40;
+    /* Tambahkan agar transisi bekerja meskipun hidden */
+    transition: background 0.5s ease-out;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-card {
+    /* Latar belakang transparan modal */
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    width: min(640px, 92%);
+    text-align: center;
+
+    /* fade + slide effect */
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.5s ease-out;
+}
+
+.modal.show .modal-card {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.modal-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    animation: floatAnimation 6s ease-in-out infinite;
+}
+
+.modal-card .message {
+    opacity: 0.9;
+    animation: floatAnimation 6s ease-in-out infinite;
+}
+
+.close {
+    position: absolute;
+    right: 16px;
+    top: 12px;
+    background: transparent;
+    border: 0;
+    color: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.close:hover {
+    opacity: 0.7;
+}
+
+/* GAYA KHUSUS UNTUK BINTANG JATUH (TITIK BERSINAR & JATUH TEGAK LURUS) */
+.falling-star {
+    background: #FFFFFF; /* Titik putih solid */
+    box-shadow: 0 0 8px 4px rgba(255, 255, 255, 0.8), /* Bayangan dalam (titik pusat) */
+                0 0 20px 10px rgba(255, 255, 255, 0.4); /* Bayangan luar (aura) */
+    position: fixed;
+    width: 5px; /* Ukuran titik kecil */
+    height: 5px;
+    border-radius: 50%; /* Bentuk bulat */
+    opacity: 0; 
+    pointer-events: none;
+}
+
+
+/* ===== Floating animation ===== */
+@keyframes floatAnimation {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+    .title { font-size: 2.2rem; }
+    .btn { padding: 0.6rem 1rem; }
+}

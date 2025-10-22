@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Untukmu ✨</title>
+    <!-- Menghubungkan file CSS -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="sky">
+        <!-- Canvas untuk Animasi Bintang berkelip -->
+        <canvas id="stars"></canvas>
+        <div class="content">
+            <h1 class="title">for you</h1>
+            <p class="subtitle">a little night for someone special</p>
+            <button id="surpriseBtn" class="btn">open surprise</button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-card">
+            <button id="closeBtn" class="close">✕</button>
+            <h2>Thank you for showing up.</h2>
+            <p class="message">Even the stars envy how bright you make my world.</p>
+        </div>
+    </div>
+
+    <!-- Background music (Pastikan file instrumental.mp3 tersedia) -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="instrumental.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Menghubungkan file JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
