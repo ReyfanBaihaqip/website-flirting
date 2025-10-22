@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Untukmu ✨</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="scene">
+        <canvas id="stars"></canvas>
+        
+        <div class="big-moon"></div>
+        <div class="rock rock-1"></div>
+        <div class="rock rock-2"></div>
+        <div class="rock rock-3"></div>
+        <div class="rock rock-4"></div>
+        
+        <p class="final-message">The Moon Is beautiful Isn't It?</p>
+
+        <div class="content">
+            <h1 class="title">for you</h1>
+            <p class="subtitle">a little night for someone special</p>
+            <button id="surpriseBtn" class="btn">open surprise</button>
+        </div>
+
+        <div id="modal" class="modal hidden">
+            <div class="modal-card">
+                <h2>Thank you for showing up.</h2>
+                <p class="message">Even the stars envy how bright you make my world.</p>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop preload="auto">
+        <source src="instrumental.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
