@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> BUAT JAMET ✨</title>
+    <title>BUAT JAMET ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Menggunakan Font Noto Sans (default) dan Montserrat (modern/elegan) */
@@ -33,6 +33,11 @@
             overflow: hidden;
             transform: scale(1);
             transition: background 1s cubic-bezier(0.8, 0.2, 0.2, 1), transform 3s ease-out;
+        }
+
+        /* Elemen Audio (Disembunyikan) */
+        #bgMusic {
+            display: none;
         }
 
         /* Efek Scene Saat Black Hole Aktif (Absorpsi Cahaya) - DIUBAH KE WARNA CINTA HANGAT */
@@ -249,10 +254,8 @@
         
         <div id="bigMoon" class="big-moon"></div>
         
-        <!-- Kalimat akhir -->
         <p id="finalMessageText" class="final-message">The Moon Is beautiful Isn't It?</p>
         
-        <!-- Menu Tombol Yes/No -->
         <div id="finalActions" class="final-actions">
             <button id="yesBtn" class="action-btn yes-btn">Yes</button>
             <button id="noBtn" class="action-btn no-btn">No</button>
@@ -260,18 +263,20 @@
 
 
         <div class="content">
-            <h1 class="title">for you</h1>
-            <p class="subtitle">a little night for someone special</p>
-            <button id="surpriseBtn" class="btn">open surprise</button>
+            <h1 class="title">CIE SALTING</h1>
+            <p class="subtitle">Sedikit Kejametan</p>
+            <button id="surpriseBtn" class="btn">Buka</button>
         </div>
 
         <div id="modal" class="modal hidden">
             <div class="modal-card">
-                <h2>Terima kasih telah hadir.</h2>
-                <p class="message">Bahkan bintang-bintang iri melihat betapa cerahnya kamu membuat duniaku.</p>
+                <h2>Anyway I've Got Something For You</h2>
+                <p class="message">Hope You Like It!</p>
             </div>
         </div>
     </div>
+    
+    <audio id="bgMusic" src="instrumental.mp3" preload="auto" loop></audio> 
 
     <script>
         // Logika Starfield dan Game
@@ -288,6 +293,9 @@
             const noBtn = document.getElementById('noBtn');
             const contentDiv = document.querySelector('.content'); 
             
+            // ELEMEN AUDIO JAVASCRIPT
+            const bgMusic = document.getElementById('bgMusic');
+            
             const INITIAL_MESSAGE = "The Moon Is beautiful Isn't It?";
 
             if (!canvas) return;
@@ -296,99 +304,82 @@
             let h = canvas.height = innerHeight;
             const stars = [];
             
-            // Inisialisasi AudioContext untuk sound effect
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             
-            // Kepadatan bintang awal (tidak terlalu ramai)
             const STAR_COUNT = Math.floor((w * h) / 12000); 
 
             let isTraveling = false; 
             let isDrifting = true; 
             let noClickCount = 0; 
             
-            const STREAK_DURATION = 4000;      
+            const STREAK_DURATION = 4000;      
             const FLASH_MODAL_DURATION = 2500; 
 
             function rand(min, max) { return Math.random() * (max - min) + min; }
 
-            // Helper function to generate white noise buffer
+            // =======================================================
+            // FUNGSI SOUND EFFECT ANDA (Lengkap)
+            // =======================================================
             function createWhiteNoise(duration) {
                 const bufferSize = audioContext.sampleRate * duration;
                 const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
                 const output = buffer.getChannelData(0);
 
                 for (let i = 0; i < bufferSize; i++) {
-                    // Generate random numbers between -1.0 and 1.0
                     output[i] = Math.random() * 2 - 1;
                 }
                 return buffer;
             }
 
-            // Fungsi untuk menghasilkan dan memainkan suara 'salah' (buzz)
             function playBuzzSound() {
-                // Buat osilator (sumber suara) dan gain (volume)
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
-
-                // Hubungkan
                 oscillator.connect(gainNode);
                 gainNode.connect(audioContext.destination);
-
-                // Konfigurasi suara
-                oscillator.type = 'square'; // Gelombang kotak untuk suara "buzz" yang jelas
-                oscillator.frequency.setValueAtTime(100, audioContext.currentTime); // Frekuensi rendah (100 Hz)
-                
-                // Volume: cepat naik dan cepat turun
+                oscillator.type = 'square';
+                oscillator.frequency.setValueAtTime(100, audioContext.currentTime);
                 gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3); // Decay dalam 0.3s
-
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
                 oscillator.start();
                 oscillator.stop(audioContext.currentTime + 0.3); 
             }
             
-            // Fungsi untuk menghasilkan dan memainkan suara 'sukses' (Fanfare/Chord C Major)
             function playSuccessSound() {
                 const time = audioContext.currentTime;
                 const gainNode = audioContext.createGain();
                 gainNode.connect(audioContext.destination);
-
-                // Volume: Peak cepat dan decay elegan (seperti tiupan terompet singkat)
                 gainNode.gain.setValueAtTime(0, time);
-                gainNode.gain.linearRampToValueAtTime(0.6, time + 0.05); // Serangan cepat
-                gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.5); // Decay total dalam 0.5s
+                gainNode.gain.linearRampToValueAtTime(0.6, time + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
                 
-                // Akor C6 Mayor (C, E, G) untuk kesan meriah/fanfare
                 const freqs = [1046.50, 1318.51, 1567.98]; 
                 const duration = 0.5;
 
                 freqs.forEach(freq => {
                     const oscillator = audioContext.createOscillator();
                     oscillator.connect(gainNode);
-                    oscillator.type = 'square'; // Gelombang kotak untuk suara cerah/terompet
+                    oscillator.type = 'square';
                     oscillator.frequency.setValueAtTime(freq, time);
-                    
                     oscillator.start(time);
                     oscillator.stop(time + duration);
                 });
             }
 
-            // Fungsi: Suara untuk 'open surprise' (Ascending chime)
             function playStartSound() {
                 const time = audioContext.currentTime;
                 const gainNode = audioContext.createGain();
                 gainNode.connect(audioContext.destination);
                 
-                // Atur volume decay
                 gainNode.gain.setValueAtTime(0.3, time);
                 gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.6);
 
-                const freqs = [440, 554.37, 659.25]; // A Major Arpeggio (A4, C#5, E5)
+                const freqs = [440, 554.37, 659.25];
                 let delay = 0;
                 
                 freqs.forEach(freq => {
                     const oscillator = audioContext.createOscillator();
                     oscillator.connect(gainNode);
-                    oscillator.type = 'triangle'; // Nada yang lebih lembut
+                    oscillator.type = 'triangle';
                     oscillator.frequency.setValueAtTime(freq, time + delay);
                     
                     oscillator.start(time + delay);
@@ -397,9 +388,8 @@
                 });
             }
 
-            // Fungsi BARU: Suara saat Bulan muncul (Efek Angin Whoosh)
             function playMoonAppearSound() {
-                const noiseDuration = 3.0; // Durasi efek
+                const noiseDuration = 3.0;
                 const noise = createWhiteNoise(noiseDuration);
                 const noiseSource = audioContext.createBufferSource();
                 noiseSource.buffer = noise;
@@ -409,36 +399,32 @@
                 
                 const gainNode = audioContext.createGain();
 
-                // Connections
                 noiseSource.connect(filter);
                 filter.connect(gainNode);
                 gainNode.connect(audioContext.destination);
 
                 const time = audioContext.currentTime;
                 
-                // Volume Envelope (Fade In/Out)
                 gainNode.gain.setValueAtTime(0, time);
-                gainNode.gain.linearRampToValueAtTime(0.3, time + 0.5); // Fade in to max volume
-                gainNode.gain.linearRampToValueAtTime(0.0001, time + noiseDuration); // Fade out
+                gainNode.gain.linearRampToValueAtTime(0.3, time + 0.5);
+                gainNode.gain.linearRampToValueAtTime(0.0001, time + noiseDuration);
                 
-                // Filter Automation (Simulate a "whoosh" by sweeping the filter)
-                // Filter freq starts low, rises to max, then slowly drops
                 filter.frequency.setValueAtTime(500, time);
                 filter.frequency.linearRampToValueAtTime(1500, time + 1.0);
                 filter.frequency.exponentialRampToValueAtTime(100, time + noiseDuration);
 
-
                 noiseSource.start(time);
                 noiseSource.stop(time + noiseDuration);
             }
-
-            // Fungsi untuk memicu getaran (haptic feedback)
+            
             function triggerVibration() {
                 if (navigator.vibrate) {
-                    // Getaran pendek
                     navigator.vibrate(200); 
                 }
             }
+            // =======================================================
+            // END FUNGSI SOUND EFFECT ANDA
+            // =======================================================
 
 
             function initStars() {
@@ -463,7 +449,6 @@
                     else if (star.alpha < 0.2) { star.alpha = 0.2; star.dr *= -1; }
 
                     if (isTraveling) {
-                        // Hujan bintang (Streak effect)
                         const streakLength = 30 * (star.r); 
                         const streakSpeed = 50; 
                         star.y = (star.y + streakSpeed); 
@@ -479,7 +464,6 @@
                         ctx.stroke();
 
                     } else if (isDrifting) { 
-                        // Pergerakan melayang lambat
                         star.y += SLOW_DRIFT_SPEED_Y; 
                         star.x += (Math.sin(star.y * 0.01) * SLOW_DRIFT_SPEED_X * 0.5); 
 
@@ -509,9 +493,9 @@
             // LOGIKA PERSUASI
             // =======================================================
             const persuaders = {
-                softener: ["Ah, aku mengerti...", "Sayang sekali...", "Hmm, benar...", "Aku menghargai kejujuranmu...", "Tapi, coba lihat lagi...", "Apakah kamu yakin?", "Apakah hatimu membisikkan 'Tidak'?", "Tolong jangan...", "Aku butuh jawaban yang berbeda...", "Jangan membuatku sedih..."],
-                persuader: ["tidakkah cahayanya mengingatkanmu pada janji kita?", "ia bersinar hanya untukmu malam ini.", "keindahannya sebanding dengan senyummu.", "ia menunggu jawabanmu yang benar.", "ia adalah saksi bisu kebersamaan kita.", "ia hanya butuh sedikit perhatian.", "ia tahu kamu merasa sebaliknya.", "ia memancarkan kehangatanmu.", "seperti yang kamu rasakan tentang aku.", "ia sama sepertimu, unik."],
-                closer: ["Bukankah itu alasan untuk menjawab 'Ya'?", "Bolehkah aku meminta kamu mengubah pikiranmu?", "Lagi pula, aku di sini bersamamu.", "Aku yakin kamu akan melihatnya sebentar lagi.", "Ayo, sekali ini saja, katakan 'Ya'.", "Aku akan terus bertanya sampai kamu mau.", "Hanya 'Ya' yang bisa menyelamatkan bulan ini.", "Bulan ini pantas mendapat 'Ya' darimu.", "Jangan biarkan aku sendirian di sini.", "Jawabanku selamanya 'Ya' untukmu."]
+                softener: ["Serius?", "Parah si...","BIKIN BAPER DOANG", "Geram nya", "Gak usah di pencet terus jamet", "Kesandung kek lu aamiin", "Suka Bilang aja gk usah gengsi", "WOILA!?!?!?!?",  "Ya Ok", "Y"],
+                persuader: ["-"],
+                closer: ["😠", "😡", "🤬", "😤", "  😒" ]
             };
 
             function getUniquePersuasionMessage() {
@@ -519,23 +503,25 @@
                 const p = persuaders.persuader[Math.floor(Math.random() * persuaders.persuader.length)];
                 const c = persuaders.closer[Math.floor(Math.random() * persuaders.closer.length)];
                 
-                const countString = noClickCount > 0 ? `(Percobaan ke-${noClickCount})` : '';
+                const countString = noClickCount > 0 ? `` : '';
 
                 return `${s} ${p} ${c} ${countString}`;
             }
 
             // FUNGSI INTI UNTUK RESPON 'YA'
             function explodeMoonAndShowResult() {
-                // 1. Matikan tombol interaksi
                 yesBtn.disabled = true;
                 noBtn.disabled = true;
                 finalActions.classList.remove('show-final-elements');
                 finalActions.style.opacity = '0';
                 
-                // EFEK SUKSES TAMBAHAN 
-                playSuccessSound(); // Memainkan fanfare yang meriah
+                // --- PERINTAH AUDIO: MUSIK TIDAK DIHENTIKAN DI SINI ---
+                // bgMusic.pause(); 
+                // bgMusic.currentTime = 0; 
+                // --------------------------------------------------------
                 
-                // Hapus kelas ledakan jika ada
+                playSuccessSound(); 
+                
                 bigMoon.classList.remove('exploded');
                 
                 // 2. Terapkan Black Hole Effect dan Efek Scene Absorpsi
@@ -546,27 +532,30 @@
                 
                 // 3. Pesan Gembira 
                 setTimeout(() => {
-                    finalMessageText.textContent = "Terima kasih! Kamu telah meledakkan kebahagiaan di hatiku! 💖";
+                    finalMessageText.textContent = "NAHH!!!🌷💖";
                     finalMessageText.style.fontSize = '2.5rem'; 
                     finalMessageText.classList.add('success-message'); 
                     finalMessageText.classList.add('show-final-elements');
                     
-                    // 4. Hilangkan Black Hole dan kembalikan scene ke mode normal (deep-space-final)
+                    // 4. Hilangkan Black Hole dan kembalikan scene ke mode normal
                     setTimeout(() => {
-                         bigMoon.classList.remove('black-hole');
-                         scene.classList.remove('absorbed');
-                         // Memastikan Bulan muncul normal lagi
-                         scene.classList.add('deep-space-final');
-                    }, 3000); // Black hole berputar selama 3 detik
+                            bigMoon.classList.remove('black-hole');
+                            scene.classList.remove('absorbed');
+                            scene.classList.add('deep-space-final');
+                    }, 3000); 
 
                 }, 400); 
             }
 
             function handleFinalDecision(isYes) {
+                // Pastikan AudioContext berjalan untuk sound effects
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+
                 if (isYes) {
-                    explodeMoonAndShowResult(); // Memanggil fungsi hasil (dan memainkan suara sukses)
+                    explodeMoonAndShowResult(); 
                 } else {
-                    // EFEK TAMBAHAN KETIKA 'NO' DIPENCET
                     triggerVibration(); 
                     playBuzzSound();
                     
@@ -581,12 +570,10 @@
                         finalMessageText.style.opacity = '1';
                     }, 200);
 
-                    // Berhenti setelah 10 kali klik
                     if (noClickCount >= 10) {
-                        finalMessageText.textContent = "Baiklah, aku menyerah. Tapi Bulan tetap cantik (dan butuh 'Ya' darimu).";
                         yesBtn.disabled = false;
-                        noBtn.disabled = true; // Nonaktifkan 'No' lagi
-                        noClickCount = 0; // Reset
+                        noBtn.disabled = true; 
+                        noClickCount = 0; 
                     }
                 }
             }
@@ -600,56 +587,58 @@
 
 
             function settleIntoDeepSpace() {
-                // Mainkan suara angin saat Bulan muncul/scrolling berhenti
                 playMoonAppearSound();
 
-                // Terapkan efek akhir: Zoom in dan munculkan planet 
                 scene.classList.add('deep-space-final'); 
-                scene.classList.remove('absorbed'); // Pastikan tidak ada efek absorpsi
+                scene.classList.remove('absorbed'); 
 
-                // Pastikan Bulan direset
                 bigMoon.classList.remove('exploded');
                 bigMoon.classList.remove('black-hole');
                 
-                // Reset pesan kembali ke awal
                 finalMessageText.textContent = INITIAL_MESSAGE;
                 finalMessageText.style.fontSize = '1.5rem';
                 finalMessageText.classList.remove('success-message'); 
                 
-                // --- Tampilkan Tombol dan Teks secara kuat setelah delay ---
-                // Mengurangi delay dari 3000ms menjadi 500ms agar elemen muncul lebih cepat
                 setTimeout(() => {
                     finalActions.classList.add('show-final-elements');
                     finalMessageText.classList.add('show-final-elements');
                     yesBtn.disabled = false;
                     noBtn.disabled = false;
                     
-                    // Pastikan elemen konten awal tetap tersembunyi
                     contentDiv.style.opacity = '0';
                     contentDiv.style.pointerEvents = 'none';
-                }, 500); // Penundaan dipersingkat menjadi 0.5 detik
+                }, 500); 
             }
             
+            // FUNGSI UTAMA: MEMULAI PERJALANAN (Memutar Instrumental di sini)
             function openModal() {
                 if (surpriseBtn.disabled) return; 
                 surpriseBtn.disabled = true;
                 surpriseBtn.textContent = 'Travelling...';
                 
-                // Mainkan suara saat "open surprise" ditekan 
+                // --- PERINTAH AUDIO: MULAI MUSIK ---
+                // Pastikan AudioContext berjalan untuk sound FX
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                // Putar instrumental.mp3 (di dalam interaksi pengguna)
+                bgMusic.play().catch(error => {
+                    console.error("Gagal memutar musik latar (Kebijakan Autoplay): ", error);
+                });
+                // -------------------------------------
+                
                 playStartSound(); 
                 
-                // Hilangkan konten awal segera 
                 contentDiv.style.opacity = '0'; 
                 contentDiv.style.pointerEvents = 'none';
                 
-                // --- RESET STATE ---
+                // --- RESET STATE & Mulai Animasi Perjalanan ---
                 isTraveling = true; 
                 isDrifting = false; 
                 scene.classList.add('traveling-mode'); 
                 scene.classList.remove('deep-space-final');
-                scene.classList.remove('absorbed'); // Pastikan efek absorpsi hilang
+                scene.classList.remove('absorbed'); 
                 
-                // Sembunyikan tombol dan pesan 
                 finalActions.classList.remove('show-final-elements');
                 finalMessageText.classList.remove('show-final-elements');
                 finalActions.style.opacity = '0';
@@ -671,10 +660,9 @@
                 setTimeout(() => {
                     // Akhiri perjalanan
                     isTraveling = false; 
-                    isDrifting = true;  
+                    isDrifting = true;  
                     scene.classList.remove('traveling-mode'); 
 
-                    // Pindah ke tampilan akhir, di sini tombol akan muncul
                     settleIntoDeepSpace(); 
                     
                     surpriseBtn.textContent = 'open surprise'; 
